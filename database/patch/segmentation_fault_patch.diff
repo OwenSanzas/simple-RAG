@@ -1,0 +1,34 @@
+# Example 1: Writing to a read-only memory location
+
+--- a/example1.c
++++ b/example1.c
+@@ -4,7 +4,7 @@ int main() {
+    char* s = "hello world";
+-   s[1] = 'H';  // SIGSEGV occurs here
++   char s[] = "hello world";  // Fix: use a mutable array
++   s[1] = 'H';  // Correct write operation
+}
+
+# Example 2: Accessing an invalid memory address
+
+--- a/example2.c
++++ b/example2.c
+@@ -4,7 +4,7 @@ int main() {
+-   int* p = (int*)0xC0000fff;
+-   *p = 10;  // SIGSEGV occurs here
++   int* p = malloc(sizeof(int));  // Fix: allocate valid memory
++   *p = 10;  // Correct write operation
++   free(p);
+}
+
+# Example 3: Dereferencing a null pointer
+
+--- a/example3.c
++++ b/example3.c
+@@ -4,7 +4,7 @@ int main() {
+-   int *a = NULL;
+-   *a = 1;  // SIGSEGV occurs here
++   int *a = malloc(sizeof(int));  // Fix: allocate valid memory
++   *a = 1;  // Correct write operation
++   free(a);
+}

@@ -1,0 +1,17 @@
+--- a/example1.cpp
++++ b/example1.cpp
+@@ -7,7 +7,10 @@ int x = 1000;
+int y = 1000;
+
+__declspec(noinline) void bad_function() {
+
+-  char* buffer = (char*)malloc(x * y * x * y); //Boom!
++  size_t size = (size_t)x * y * x * y;
++  if (size > (1 << 30)) { // Limit allocation to 1GB for safety
++      printf("Requested allocation size too big!\n");
++      return;
++  }
++  char* buffer = (char*)malloc(size); // Correct allocation
+
+  memcpy(buffer, buffer + 8, 8); 
+}

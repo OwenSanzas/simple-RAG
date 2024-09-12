@@ -1,0 +1,38 @@
+# Step-by-step guide to reproduce allocation-size-too-big errors
+
+## Example: allocation-size-too-big error in C++
+
+### Source Code:
+
+// example1.cpp
+// allocation-size-too-big error
+#include <stdio.h>
+#include <malloc.h>
+#include <memory.h>
+
+int x = 1000;
+int y = 1000;
+
+__declspec(noinline) void bad_function() {
+
+  char* buffer = (char*)malloc(x * y * x * y); //Boom!
+
+  memcpy(buffer, buffer + 8, 8); 
+}
+
+int main(int argc, char **argv) {
+    bad_function();
+    return 0;
+}
+
+### Reproduction Steps:
+
+1. Open a Visual Studio 2019 version 16.9 or later developer command prompt.
+2. Run the following command to compile the example:
+   cl example1.cpp /fsanitize=address /Zi
+3. Run the compiled executable using Visual Studio Debugger:
+   devenv /debugexe example1.exe
+4. Observe the AddressSanitizer output for allocation-size-too-big error.
+
+Expected Output:
+   AddressSanitizer: allocation-size-too-big on address 0x...

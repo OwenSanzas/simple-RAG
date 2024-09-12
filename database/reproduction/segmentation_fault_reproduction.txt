@@ -1,0 +1,153 @@
+# Step-by-step guide to reproduce segmentation fault (SIGSEGV) errors
+
+## Example 1: Writing to a read-only memory location
+
+### Source Code:
+
+// file: example1.c
+// segmentation fault error
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    char* s = "hello world";
+    s[1] = 'H';  // SIGSEGV occurs here
+}
+
+### Reproduction Steps:
+
+1. Open a terminal or command prompt.
+2. Run the following command to compile the example:
+   gcc -o example1 example1.c
+3. Run the compiled executable:
+   ./example1
+4. Observe the output: segmentation fault (core dumped).
+
+---
+
+## Example 2: Accessing an invalid memory address
+
+### Source Code:
+
+// file: example2.c
+// segmentation fault error
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int* p = (int*)0xC0000fff;
+    *p = 10;  // SIGSEGV occurs here
+}
+
+### Reproduction Steps:
+
+1. Open a terminal or command prompt.
+2. Run the following command to compile the example:
+   gcc -o example2 example2.c
+3. Run the compiled executable:
+   ./example2
+4. Observe the output: segmentation fault (core dumped).
+
+---
+
+## Example 3: Dereferencing a null pointer
+
+### Source Code:
+
+// file: example3.c
+// segmentation fault error
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int *a = NULL;
+    *a = 1;  // SIGSEGV occurs here
+}
+
+### Reproduction Steps:
+
+1. Open a terminal or command prompt.
+2. Run the following command to compile the example:
+   gcc -o example3 example3.c
+3. Run the compiled executable:
+   ./example3
+4. Observe the output: segmentation fault (core dumped).
+
+-----
+Example 4:
+
+
+## Step-by-Step Guide to Reproduce Segmentation Fault (SIGSEGV) by Accessing an Unknown Address
+
+### Overview
+
+This guide provides an example of how to trigger a **Segmentation Fault (SIGSEGV)** by accessing an unknown memory address through an out-of-bounds array index. The program reads user input into a fixed-size array and then accesses the array using an index provided by the user. If the index is outside the valid range, it results in a segmentation fault.
+
+### Example: Accessing an Unknown Memory Address via Out-of-Bounds Array Index
+
+#### Source Code
+
+Create a file named `segv_array_example.c` and add the following code:
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ITEMS 3
+#define ITEM_SIZE 10
+
+char items[MAX_ITEMS][ITEM_SIZE];  // Define a 2D array to store input items
+
+void input() {
+    int i = 0;
+    char *buffer;
+    while (i < MAX_ITEMS) {
+        printf("Enter item %d: ", i);
+        buffer = &items[i][0];
+        if (fgets(buffer, ITEM_SIZE, stdin) == NULL) break;  // Read input from stdin
+        buffer[strcspn(buffer, "\n")] = 0;  // Remove newline character
+        if (strlen(buffer) == 0) break;  // Exit loop if input is empty
+        i++;
+    }
+
+    int index;
+        printf("Enter item index to display: ");
+        scanf("%d", &index);  // User provides an index
+        if (index >= 0 && index < MAX_ITEMS) {
+            printf("Item %d: %s\n", index, items[index]);
+        } else {
+            printf("Attempting to access an unknown address...\n");
+            printf("Item %d: %s\n", index, items[index]);  // Out-of-bounds access likely causes SEGV
+        }
+}
+
+
+int main() {
+    input()
+    return 0;
+}
+
+Reproduction Steps
+Compile the code: Open a terminal or command prompt and run the following command to compile the code:
+
+
+gcc -o segv_array_example segv_array_example.c
+Run the program: Execute the compiled program by running:
+
+./segv_array_example
+Provide input:
+
+Enter a and press Enter.
+Enter b and press Enter.
+Press Enter again to provide an empty line, which ends the input phase.
+Enter 1000 for index
+Trigger the segmentation fault:
+
+When prompted for an index, enter a value that is out of bounds, such as 100, and press Enter.
+Observe the output:
+
+The program will attempt to access an invalid memory location and will crash with a segmentation fault:
+
+Attempting to access an unknown address...
+Segmentation fault (core dumped)
+
